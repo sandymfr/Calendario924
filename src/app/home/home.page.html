@@ -1,0 +1,82 @@
+<ion-header>
+    <ion-toolbar color="tertiary">
+      <ion-title>
+        {{ viewTitle }}
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="today()">Hoje</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+   
+  <ion-content>
+   
+    <!-- cadastrar novo evento -->
+    <ion-card>
+      <ion-card-header tappable (click)="collapseCard = !collapseCard">
+        <ion-card-title>Novo evento</ion-card-title>
+      </ion-card-header>
+      <ion-card-content *ngIf="collapseCard">
+   
+        <ion-item>
+          <ion-input type="text" placeholder="Título" [(ngModel)]="event.title"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input type="text" placeholder="Descrição" [(ngModel)]="event.desc"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Início</ion-label>
+          <ion-datetime displayFormat="DD/MM/YYYY HH:mm" pickerFormat="DDD M:HH:mm" [(ngModel)]="event.startTime" [min]="minDate"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label>Término</ion-label>
+          <ion-datetime displayFormat="DD/MM/YYYY HH:mm" pickerFormat="DDD M:HH:mm" [(ngModel)]="event.endTime" [min]="minDate"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label>Dia inteiro</ion-label>
+          <ion-checkbox [(ngModel)]="event.allDay"></ion-checkbox>
+        </ion-item>
+        <ion-button fill="clear" color="tertiary" expand="block" (click)="addEvent()" [disabled]="event.title == ''">Adicionar</ion-button>
+   
+      </ion-card-content>
+    </ion-card>
+   
+    <ion-row>
+      <!-- mudar visualização -->
+      <ion-col size="4">
+        <ion-button expand="block" [color]="calendar.mode == 'month' ? 'tertiary' : 'tertiary'" (click)="changeMode('month')">Mês</ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button expand="block" [color]="calendar.mode == 'week' ? 'tertiary' : 'tertiary'" (click)="changeMode('week')">Semana</ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button expand="block" [color]="calendar.mode == 'day' ? 'tertiary' : 'tertiary'" (click)="changeMode('day')">Dia</ion-button>
+      </ion-col>
+   
+      <ion-col size="6" text-left>
+        <ion-button fill="clear" (click)="back()">
+          <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+   
+      <ion-col size="6" text-right>
+        <ion-button fill="clear" (click)="next()">
+          <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+   
+    <calendar 
+    [eventSource]="eventSource" 
+    [calendarMode]="calendar.mode" 
+    [currentDate]="calendar.currentDate"
+    (onEventSelected)="onEventSelected($event)"
+    (onTitleChanged)="onViewTitleChanged($event)"
+    (onTimeSelected)="onTimeSelected($event)" 
+    startHour="0"
+    endHour="23"
+    step="30"
+    startingDayWeek="0">
+    </calendar>
+   
+  </ion-content>
